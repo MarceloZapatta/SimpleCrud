@@ -19,4 +19,8 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::resource('/professores', 'ProfessorController');
+Route::resource('/professores', 'ProfessorController')->parameters([
+    'professores' => 'professor'
+])->except([
+    'show'
+]);

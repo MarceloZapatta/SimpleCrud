@@ -15,6 +15,8 @@ class CreateProfessoresTable extends Migration
     {
         Schema::create('professores', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('nome');
+            $table->boolean('ativo')->default(1)->comment('Indica se o professor está ativo.');
             $table->timestamps();
         });
     }
