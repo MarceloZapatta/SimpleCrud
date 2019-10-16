@@ -14,7 +14,9 @@
                             {{ session('status') }}
                         </div>
                     @endif
-                    <form method="POST" action="{{ route('professores.update') }}" autocomplete="off">
+                    <form action="{{ route('professores.update', ['professor' => $professor->id]) }}"
+                        method="POST" autocomplete="off">
+                        @method('PUT')
                         @csrf
                         <div class="form-group row">
                             <label for="nome" class="col-md-4 col-form-label text-md-right">
@@ -35,16 +37,18 @@
                             </label>
                             <div class="col-md-6">
                                 <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="radio1" name="radioStatus" class="custom-control-input">
-                                    <label class="custom-control-label" for="radio1"
+                                    <input type="radio" id="radio1" name="radioStatus"
+                                        class="custom-control-input" value="1"
                                         {{ $professor->ativo ? 'checked' : '' }}>
+                                    <label class="custom-control-label" for="radio1">
                                         Ativo
                                     </label>
                                 </div>
                                 <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="radio2" name="radioStatus" class="custom-control-input">
-                                    <label class="custom-control-label" for="radio2"
+                                    <input type="radio" id="radio2" name="radioStatus"
+                                        class="custom-control-input" value="0"
                                         {{ !$professor->ativo ? 'checked' : '' }}>
+                                    <label class="custom-control-label" for="radio2">
                                         Inativo
                                     </label>
                                 </div>
@@ -60,6 +64,9 @@
                                 <button type="submit" class="btn btn-primary">
                                     Gravar
                                 </button>
+                                <button id="button-excluir" type="button" class="btn btn-danger" onclick="clickButtonExcluir()">
+                                    Excluir
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -68,4 +75,38 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+function clickButtonExcluir() {
+    Swal.fire({
+      title: 'Tem certeza que deseja excluir?',
+      text: 'Essa ação não poderá ser revertida',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sim, excluir',
+      cancelButtonText: 'Cancelar'
+    }).then(function (result) {
+      if (result.value) {
+        axios({
+            method: 'delete',
+            url: '{{ route('professores.destroy', ['professor' => $professor->id]) }}'
+        }).then(function (response) {
+            Swal.fire(
+                'Excluído!',
+                'O professor foi excluído.',
+                'success'
+            ).then(function (result) {
+                window.location.href = '{{ route('professores.index') }}';
+            });
+        });
+      }
+    });
+}
+</script>
 @endsection

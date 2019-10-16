@@ -32,6 +32,13 @@
                               </tr>
                           </thead>
                           <tbody>
+                              @if ($professores->count() < 1)
+                              <tr>
+                                <td colspan="2">
+                                  Nenhum registro encontrado
+                                </td>
+                              </tr>
+                              @endif
                               @foreach ($professores as $professor)
                               <tr>
                                   <td>
